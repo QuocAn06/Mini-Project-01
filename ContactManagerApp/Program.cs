@@ -14,12 +14,13 @@ class Program
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("==== Contact Manager Application ====");
+            Console.WriteLine("==== CONTACT MANAGER APPLICATION ====");
             Console.WriteLine("1. Add Contact");
             Console.WriteLine("2. Search Contact by Name");
             Console.WriteLine("3. Delete Contact");
             Console.WriteLine("4. Save Contacts to File");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Show All Contacts");
+            Console.WriteLine("0. Exit");
             Console.Write("Choose an option (1–5): ");
 
             string? choice = Console.ReadLine();
@@ -53,6 +54,12 @@ class Program
                     }
 
                 case "5":
+                    {
+                        ShowAllContacts(manager);
+                        break;
+                    }
+
+                case "0":
                     {
                         Console.WriteLine("Exiting program...");
                         return;
@@ -98,7 +105,7 @@ class Program
             Console.WriteLine("Found contacts:");
             foreach (var contact in results)
             {
-                Console.WriteLine($"Name: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
+                PrintContact(contact);
             }
         }
 
@@ -112,7 +119,30 @@ class Program
         bool success = manager.DeleteContact(name);
 
         Console.WriteLine(success ? "Contact deleted." : "Contact not found.");
+
         Pause();
+    }
+
+    static void ShowAllContacts(ContactManager manager)
+    {
+        Console.WriteLine("\n--- All Contacts ---");
+
+        if (manager.listContacts.Count == 0)
+        {
+            Console.WriteLine("⚠️  No contacts found.");
+        }
+        else
+        {
+            foreach (var contact in manager.listContacts)
+                PrintContact(contact);
+        }
+
+        Pause();
+    }
+
+    static void PrintContact(Contact contact)
+    {
+        Console.WriteLine($"- Name: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
     }
 
     static void Pause()

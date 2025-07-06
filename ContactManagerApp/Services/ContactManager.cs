@@ -95,5 +95,47 @@ namespace ContactManagerApp.Services
             }
         }
 
+        // Async Save Contacts To File CSV method (string path)
+        public async Task SaveToCsvAsync(string filePath)
+        {
+            using (var writer = new StreamWriter(filePath))
+            {
+                foreach (var contact in contacts)
+                {
+                    await writer.WriteLineAsync($"{contact.Name}, {contact.Phone}, {contact.Email}");
+                }
+            }
+        }
+
+        // Async Load Contacts From File CSV method (string path)
+        public async Task LoadFromCsvAsync(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("File not found.");
+                return;
+            }
+
+            contacts.Clear();
+            
+            using (var reader = new StreamReader(filePath))
+            {
+                string? line;
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    var parts = line.Split(',');
+                    if (parts.Length == 3)
+                    {
+                        contacts.Add(new Contact
+                        {
+                            Name = parts[0].Trim(),
+                            Phone = parts[1].Trim(),
+                            Email = parts[2].Trim()
+                        });
+                    }
+                }
+            }
+        }
+
     }
 }
